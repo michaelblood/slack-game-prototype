@@ -14,25 +14,18 @@ const getRequestData = (url, message) => {
 
 const alertUsers = (game, winner) => {
   let { first, second } = game;
-  if (winner.user_id === first.user_id) {
-    request(getRequestData(first.response_url, 'you won'), (err, res, body) => {
-      console.log('error:', err);
-      console.log('body:', body);
-    });
-    request(getRequestData(second.response_url, 'you lost'), (err, res, body) => {
-      console.log('error:', err);
-      console.log('body:', body);
-    });
+  if (winner === 'draw') {
+    request(getRequestData(first.response_url, 'it was a draw'));
+    request(getRequestData(second.response_url, 'it was a draw'));
     return;
   }
-  request(getRequestData(second.response_url, 'you won'), (err, res, body) => {
-      console.log('error:', err);
-      console.log('body:', body);
-    });
-  request(getRequestData(first.response_url, 'you lost'), (err, res, body) => {
-      console.log('error:', err);
-      console.log('body:', body);
-    });
+  if (winner.user_id === first.user_id) {
+    request(getRequestData(first.response_url, 'you won'));
+    request(getRequestData(second.response_url, 'you lost'));
+    return;
+  }
+  request(getRequestData(second.response_url, 'you won'));
+  request(getRequestData(first.response_url, 'you lost'));
 };
 
 const computeWinner = (p1, p2) => {
@@ -54,6 +47,7 @@ const getResult = (game) => {
   const [p1, p2] = checkedIn;
   if (p1.move === p2.move) {
     game.status = 'game-over';
+    alertUsers(game, 'draw');
     return game.save();
   }
   const winner = computeWinner(p1, p2);
