@@ -96,7 +96,7 @@ exports.isUserInGame = (user_id) => {
   return Games.find({
     $and: [
       { $or: [{ 'first.user_id': user_id }, { 'second.user_id': user_id }] },
-      { status: { $not: 'game-over' } }
+      { status: { $not: /game-over/ig } }
     ]
   }).then(docs => {
     if (!docs[0]) {
