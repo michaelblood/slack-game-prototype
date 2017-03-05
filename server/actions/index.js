@@ -15,12 +15,24 @@ const getRequestData = (url, message) => {
 const alertUsers = (game, winner) => {
   let { first, second } = game;
   if (winner.user_id === first.user_id) {
-    request(getRequestData(first.response_url, 'you won'));
-    request(getRequestData(second.response_url, 'you lost'));
+    request(getRequestData(first.response_url, 'you won'), (err, res, body) => {
+      console.log('error:', err);
+      console.log('body:', body);
+    });
+    request(getRequestData(second.response_url, 'you lost'), (err, res, body) => {
+      console.log('error:', err);
+      console.log('body:', body);
+    });
     return;
   }
-  request(getRequestData(second.response_url, 'you won'));
-  request(getRequestData(first.response_url, 'you lost'));
+  request(getRequestData(second.response_url, 'you won'), (err, res, body) => {
+      console.log('error:', err);
+      console.log('body:', body);
+    });
+  request(getRequestData(first.response_url, 'you lost'), (err, res, body) => {
+      console.log('error:', err);
+      console.log('body:', body);
+    });
 };
 
 const computeWinner = (p1, p2) => {
