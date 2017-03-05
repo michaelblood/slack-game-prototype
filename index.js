@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 global.Promise = require('bluebird');
 require('dotenv').config();
 
-const uri = process.env.MONGOURI
+const uri = process.env.MONGODB_URI
 
 const options = {
   server: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } }, 
