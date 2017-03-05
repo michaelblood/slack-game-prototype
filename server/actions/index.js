@@ -5,12 +5,12 @@ const { Games } = require('../models');
 const alertUsers = (game, winner) => {
   let { first, second } = game;
   if (winner.user_id === first.user_id) {
-    request.post(first.response_url, { text: 'you won' });
-    request.post(second.response_url, { text: 'you lost' });  
+    request.post({url: first.response_url, json: true, body: {text: 'you won' }});
+    request.post({url: second.response_url, json: true, body: {text: 'you lost' }});
     return;
   }
-  request.post(first.response_url, { text: 'you lost' });
-  request.post(second.response_url, { text: 'you won' });
+  request.post({url: first.response_url, json: true, body: {text: 'you lost' }});
+  request.post({url: second.response_url, json: true, body: {text: 'you won' }});
 };
 
 const computeWinner = (p1, p2) => {
@@ -31,7 +31,7 @@ const getResult = (game) => {
   }
   const [p1, p2] = checkedIn;
   if (p1.move === p2.move) {
-    game.status = 'draw';
+    game.status = 'game-over';
     return game.save();
   }
   const winner = computeWinner(p1, p2);

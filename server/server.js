@@ -12,8 +12,8 @@ app.set('port', process.env.PORT || 3000);
 
 app.post('/api/*', (req, res) => {
   commands(req.body)
-    .then(text => res.json({text}))
-    .catch(err => res.json({text: err.toString()}));
+    .then(text => res.status(200).json({text}))
+    .catch(err => res.status(200).json({text: err.toString()}));
 });
 
 module.exports = app;
