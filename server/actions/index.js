@@ -2,15 +2,25 @@ const request = require('request');
 
 const { Games } = require('../models');
 
+const getRequestData = (url, message) => {
+  return {
+    url,
+    json: {
+      text: message,
+    },
+    method: 'POST'
+  }
+};
+
 const alertUsers = (game, winner) => {
   let { first, second } = game;
   if (winner.user_id === first.user_id) {
-    request.post({url: first.response_url, json: true, body: {text: 'you won' }});
-    request.post({url: second.response_url, json: true, body: {text: 'you lost' }});
+    request(getRequestData(first.response_url, 'you won'));
+    request(getRequestData(second.response_url, 'you lost'));
     return;
   }
-  request.post({url: first.response_url, json: true, body: {text: 'you lost' }});
-  request.post({url: second.response_url, json: true, body: {text: 'you won' }});
+  request(getRequestData(second.response_url, 'you won'));
+  request(getRequestData(first.response_url, 'you lost'));
 };
 
 const computeWinner = (p1, p2) => {
@@ -66,7 +76,7 @@ exports.joinGame = (user_id, response_url, game_id) => {
     }
     game.second.user_id = user_id;
     game.second.response_url = response_url;
-    request.post(game.first.response_url, {text: `game ${game._id} started: type '/rps [rock, paper, or scissors]' to play`})
+    request(getRequestData(game.first.response_url, `game ${game._id} started: type '/rps [rock, paper, or scissors]' to play`));
     return game.save();
   })
 };
