@@ -98,6 +98,9 @@ exports.inputMove = (game_id, user_id, move) => {
     if (game.status === 'game-over') {
       throw new Error('this game is over');
     }
+    if (game.checkedIn.length === 1 && game.checkedIn[0].user_id === user_id) {
+      throw new Error(`you've already played!`);
+    }
 
     game.checkedIn.push({user_id, move});
     if (game.checkedIn.length === 1) {

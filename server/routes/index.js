@@ -10,9 +10,8 @@ module.exports = {
         return reject('invalid command');
       }
       const arr = (text || '').split(' ');
-      if (!arr[0]) {
-        // TODO: proper help text
-        return resolve('help text');
+      if (!arr[0] || arr[0] === 'help') {
+        return resolve('`/rps` or `/rps help`: this message\n`/rps create`: create a new game\n`/rps join [id]`: join the game with the specified `id`\n`/rps [rock, paper, scissors]`: make the specified move');
       }
       switch (arr[0]) {
         case 'create': 
@@ -21,7 +20,7 @@ module.exports = {
               return resolve('you are already in game ' + isInGame._id);
             }
             return createGame(user_id, response_url).then(game => {
-              return resolve(`game id ${game._id} created. to join, have your friend type '/rps join ${game._id}'`);
+              return resolve(`game id ${game._id} created. to join, have your friend type \`/rps join ${game._id}\``);
             });
           }).catch(reject);
 
@@ -31,14 +30,14 @@ module.exports = {
           }
           return isUserInGame(user_id).then(isInGame => {
             if (isInGame) {
-              return resolve('you are already in game ' + isInGame._id);
+              return resolve(`you are already in ${isInGame._id}`);
             }
             const game_id = arr[1];
             if (!game_id) {
               return reject('you did not provide a game id');
             }
             return joinGame(user_id, response_url, game_id).then(game => {
-              return resolve(`game ${game._id} started: type '/rps [rock, paper, or scissors]' to play`);
+              return resolve(`game ${game._id} started: type \`/rps [rock, paper, or scissors]\` to play`);
             }).catch(reject);
           })
           
@@ -57,7 +56,7 @@ module.exports = {
             });
           }).catch(reject);
         default:
-          reject('valid commands are `/rps create`, `/rps join [id]`, and `/rps [rock, paper, or scissors]`');
+          reject('valid commands are `/rps help`, /rps create`, `/rps join [id]`, and `/rps [rock, paper, or scissors]`');
       }
     });
   },
